@@ -1,16 +1,16 @@
 import { IsDefined, IsEmail, IsString, Length } from 'class-validator';
 
-export class CreateUserDto {
+export class RegisterUserDto {
   @IsDefined()
   @IsString()
-  name: string;
+  readonly name: string;
 
   @IsDefined()
   @IsEmail()
-  email: string;
+  readonly email: string;
 
   @IsDefined()
   @IsString()
   @Length(5, 20, { message: 'Tol kafi nist' })
-  password: string;
+  readonly password: string;
 }
