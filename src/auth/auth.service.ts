@@ -7,12 +7,14 @@ import { PrismaService } from '../prisma/prisma.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import * as argon2 from 'argon2';
 import { OtpService } from '../otp/otp.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private otpService: OtpService,
+    private jwtService: JwtService,
   ) {}
 
   async registerUser(userDataBody: RegisterUserDto): Promise<RegisterUserDto> {
@@ -47,5 +49,12 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  async login(user: any) {
+    const payload = { id: user.id, email: user.email };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
