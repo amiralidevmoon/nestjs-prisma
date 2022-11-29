@@ -8,16 +8,22 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Roles } from './decorators/roles.decorator';
+import { JWTAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RoleGuard } from './guards/role.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get('/')
+  @UseGuards(JWTAuthGuard, RoleGuard)
+  @Roles('ADMIN')
   async getUsers(): Promise<CreateUserDto[]> {
     const users = await this.usersService.getUsers();
     if (!users) {
