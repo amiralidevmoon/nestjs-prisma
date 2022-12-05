@@ -18,19 +18,23 @@ export class AuthService {
   ) {}
 
   async registerUser(userDataBody: RegisterUserDto): Promise<RegisterUserDto> {
-    // await this.otpService.sendSmsToUser();
+    try {
+      // await this.otpService.sendSmsToUser();
 
-    const hashedPassword = await argon2.hash(userDataBody.password);
+      const hashedPassword = await argon2.hash(userDataBody.password);
 
-    const user = await this.prismaService.user.create({
-      data: {
-        name: userDataBody.name,
-        email: userDataBody.email,
-        password: hashedPassword,
-      },
-    });
+      const user = await this.prismaService.user.create({
+        data: {
+          name: userDataBody.name,
+          email: userDataBody.email,
+          password: hashedPassword,
+        },
+      });
 
-    return user;
+      return user;
+    } catch (e) {
+      return e;
+    }
   }
 
   async validateUser(email: string, password: string) {
